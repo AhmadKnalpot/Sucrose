@@ -5,6 +5,23 @@ if(!isset($_SESSION['login'])){
     header("Location: index.php");
     exit;
 }
+include "../config/koneksi.php";
+
+$id = $_SESSION['id'];
+
+$queryUser = mysqli_query($conn, "SELECT * FROM user WHERE id='$id'");
+$user = mysqli_fetch_assoc($queryUser);
+
+// Foto default
+$foto = "../assets/img/avatar.png";
+
+// Jika user memiliki foto
+if (
+    !empty($user['foto']) &&
+    file_exists("../assets/uploads/profile/".$user['foto'])
+) {
+    $foto = "../assets/uploads/profile/".$user['foto'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -41,11 +58,19 @@ if(!isset($_SESSION['login'])){
         <i class="fa-solid fa-house"></i>
         <span>Home</span>
     </a>
-    <a href="../users/user.php">
-        <i class="fa-solid fa-users"></i>
-        User
+
+    <a href="../users/user.php"
+       class="user-profile">
+
+        <img src="<?= $foto; ?>"
+             class="profile-img"
+             alt="Foto Profil">
+
+        <span><?= $user['nama']; ?></span>
+
     </a>
-        <a href="../logout.php"
+
+    <a href="../logout.php"
        class="btn btn-danger">
 
         <i class="fa-solid fa-right-from-bracket"></i>

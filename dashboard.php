@@ -5,6 +5,22 @@ if(!isset($_SESSION['login'])){
     header("Location: index.php");
     exit;
 }
+include "config/koneksi.php";
+$id = $_SESSION['id'];
+
+$query = mysqli_query($conn, "SELECT * FROM user WHERE id='$id'");
+$user = mysqli_fetch_assoc($query);
+
+// Foto default
+$foto = "assets/img/avatar.png";
+
+// Jika ada foto dan file benar-benar ada
+if (
+    !empty($user['foto']) &&
+    file_exists("assets/uploads/profile/".$user['foto'])
+) {
+    $foto = "assets/uploads/profile/".$user['foto'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -143,6 +159,19 @@ body{
     background:#2196f3;
 
 }
+.profile-img{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:2px solid white;
+
+}
 
 .melon{
 
@@ -219,13 +248,21 @@ footer{
 <span>SUCROSE</span>
 
 </a>
-  <div class="ms-auto">
-<nav class="navbar">
+  <div class="ms-auto d-flex align-items-center">
 
-    <a href="users/user.php">
-        <i class="fa-solid fa-users"></i>
-        User
+    <a href="users/user.php"
+       class="text-white text-decoration-none d-flex align-items-center me-3">
+
+        <img src="<?php echo $foto; ?>"
+            width="45"
+            height="45"
+            class="rounded-circle border border-2 border-white me-2"
+            style="object-fit:cover;">
+
+        <span><?php echo $_SESSION['nama']; ?></span>
+
     </a>
+
     <a href="logout.php"
        class="btn btn-danger">
 
@@ -235,7 +272,6 @@ footer{
 
     </a>
 
-</nav>
 </div>
 
 </div>

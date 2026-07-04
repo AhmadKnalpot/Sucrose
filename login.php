@@ -7,15 +7,34 @@ $error = "";
 if(isset($_POST['login'])){
 
     $username = mysqli_real_escape_string($conn,$_POST['username']);
-    $password = md5($_POST['password']);
+    $password = $_POST['password'];
 
-    $query = mysqli_query($conn,"SELECT * FROM user
-    WHERE username='$username'
-    AND password='$password'");
+    $query = mysqli_query($conn,"SELECT * FROM user WHERE username='$username'");
 
-    if(mysqli_num_rows($query)>0){
+   if(mysqli_num_rows($query) > 0){
 
-        $user = mysqli_fetch_assoc($query);
+    $user = mysqli_fetch_assoc($query);
+
+    $loginBerhasil = false;
+
+    // Password akun baru (password_hash)
+    if(password_verify($password, $user['password'])){
+        $loginBerhasil = true;
+    }
+
+    // Password akun lama (MD5)
+    elseif(md5($password) == $user['password']){
+        $loginBerhasil = true;
+
+        // Upgrade otomatis ke password_hash
+        $passwordBaru = password_hash($password, PASSWORD_DEFAULT);
+
+        mysqli_query($conn, "UPDATE user
+        SET password='$passwordBaru'
+        WHERE id='".$user['id']."'");
+    }
+
+    if($loginBerhasil){
 
         $_SESSION['login'] = true;
         $_SESSION['id'] = $user['id'];
@@ -31,6 +50,12 @@ if(isset($_POST['login'])){
         $error = "Username atau Password salah!";
 
     }
+
+}else{
+
+    $error = "Username atau Password salah!";
+
+}
 
 }
 ?>
@@ -256,9 +281,8 @@ padding:30px;
 
 </div>
 
-<form method="POST">
-
-<div class="input-group">
+<form method="POST" action="login.php">
+    <div class="input-group">
 
 <label>
 
@@ -301,6 +325,22 @@ name="login">
 Login
 
 </button>
+<div style="margin-top:20px;text-align:center;">
+
+Belum punya akun?
+
+<a href="register.php"
+style="
+color:#2E7D32;
+font-weight:bold;
+text-decoration:none;
+">
+
+Daftar Sekarang
+
+</a>
+
+</div>
 
 <?php
 

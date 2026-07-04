@@ -7,6 +7,21 @@ if(!isset($_SESSION['login'])){
 }
 
 include "../config/koneksi.php";
+$id = $_SESSION['id'];
+
+$queryUser = mysqli_query($conn, "SELECT * FROM user WHERE id='$id'");
+$user = mysqli_fetch_assoc($queryUser);
+
+// Foto default
+$foto = "../assets/img/avatar.png";
+
+// Jika user memiliki foto
+if (
+    !empty($user['foto']) &&
+    file_exists("../assets/uploads/profile/" . $user['foto'])
+) {
+    $foto = "../assets/uploads/profile/" . $user['foto'];
+}
 /**
  * @var mysqli $conn */
 
@@ -123,26 +138,32 @@ margin-top:30px;
      class="me-3">
 
 <span>SUCROSE</span>
-<nav class="navbar">
+<div class="d-flex align-items-center ms-auto">
 
-    <a href="../dashboard.php" class="nav-link">
+    <a href="../dashboard.php" class="nav-link text-white me-3">
         <i class="fa-solid fa-house"></i>
-        <span>Home</span>
+        Home
     </a>
-    <a href="../users/user.php">
-        <i class="fa-solid fa-users"></i>
-        User
-    </a>
-        <a href="../logout.php"
-       class="btn btn-danger">
 
+    <a href="../users/user.php"
+       class="text-white text-decoration-none d-flex align-items-center me-3">
+
+        <img src="<?= $foto ?>"
+             width="45"
+             height="45"
+             class="rounded-circle border border-2 border-white me-2"
+             style="object-fit:cover;">
+
+        <span><?= $user['nama']; ?></span>
+
+    </a>
+
+    <a href="../logout.php" class="btn btn-danger">
         <i class="fa-solid fa-right-from-bracket"></i>
-
         Logout
-
     </a>
 
-</nav>
+</div>
 
 </a>
 
