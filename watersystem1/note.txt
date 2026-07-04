@@ -1,0 +1,14 @@
+Jalankan [watersystem1.ino] pada Arduino IDE dan install library berikut untuk menjalankan code ini :
+- Blynk
+- Adafruit SSD1306
+- Adafruit GFX library
+- BlynkNcpDriver
+
+kemudian install Board:
+- esp32 by Espressif System
+
+note :
+
+//#define BLYNK_TEMPLATE_ID "ISI SESUAI TOKEN PADA BLYNK"
+//#define BLYNK_TEMPLATE_NAME "ISI SESUAI TOKEN PADA BLYNK"
+//#define BLYNK_AUTH_TOKEN "ISI SESUAI TOKEN PADA BLYNK"
